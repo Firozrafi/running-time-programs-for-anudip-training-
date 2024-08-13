@@ -1,0 +1,21 @@
+
+CREATE TABLE STUDENT (
+    R_NO NUMBER(2) PRIMARY KEY,
+    NAME VARCHAR2(15),
+    D_O_BIRTH DATE,
+    C_ID NUMBER(3),
+    CONSTRAINT fk_course FOREIGN KEY (C_ID) REFERENCES COURSE(C_ID)
+);
+INSERT INTO COURSE (C_ID, NAME, FEE, DURATION) VALUES (&c_id, '&name', &fee, &duration);
+INSERT INTO STUDENT (R_NO, NAME, D_O_BIRTH, C_ID) VALUES (&r_no, '&name', TO_DATE('&d_o_birth', 'YYYY-MM-DD'), &c_id);
+
+-- (I) Select students who are 18 years or older and enrolled in the course 'MCA'
+SELECT * 
+FROM STUDENT 
+WHERE 18 <= TRUNC(MONTHS_BETWEEN(SYSDATE, D_O_BIRTH) / 12)
+AND C_ID = (SELECT C_ID FROM COURSE WHERE NAME = 'MCA');
+
+-- (II) Select courses where the fee is greater than the fee for the course 'MCA'
+SELECT * 
+FROM COURSE 
+WHERE FEE > (SELECT MAX(FEE) FROM COURSE WHERE NAME = 'MCA');
